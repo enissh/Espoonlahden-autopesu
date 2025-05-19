@@ -76,17 +76,13 @@ async function sendBookingEmail({ to, subject, text, html }) {
     sendSmtpEmail.textContent = text;
     sendSmtpEmail.htmlContent = html;
     
-    // Add headers to improve deliverability
+    // Simplified headers for better deliverability
     sendSmtpEmail.headers = {
       'X-Mailin-Custom': 'Premium Wash Booking System',
       'X-Mailin-Tag': 'Booking Confirmation',
       'List-Unsubscribe': `<mailto:${process.env.FROM_EMAIL}?subject=unsubscribe>`,
       'Precedence': 'bulk',
-      'X-Auto-Response-Suppress': 'OOF, AutoReply',
-      'X-MS-Exchange-CrossTenant-OriginalArrivalTime': new Date().toISOString(),
-      'X-MS-Exchange-CrossTenant-Id': 'premiumwash.onrender.com',
-      'X-MS-Exchange-CrossTenant-FromEntityHeader': 'Premium Wash',
-      'X-MS-Exchange-Transport-CrossTenantHeadersStamped': 'premiumwash.onrender.com'
+      'X-Auto-Response-Suppress': 'OOF, AutoReply'
     };
 
     // Add reply-to header
@@ -95,13 +91,9 @@ async function sendBookingEmail({ to, subject, text, html }) {
       name: "Premium Wash Support"
     };
 
-    // Add DKIM and SPF headers
-    sendSmtpEmail.headers['DKIM-Signature'] = 'v=1; a=rsa-sha256; c=relaxed/relaxed; d=premiumwash.onrender.com; s=default; t=1234567890; bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=; h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=';
-    sendSmtpEmail.headers['X-Sender'] = process.env.FROM_EMAIL;
-    sendSmtpEmail.headers['X-Authenticated-Sender'] = process.env.FROM_EMAIL;
-
+    // Remove custom DKIM and SPF headers as Brevo handles this
     // Add message ID for better tracking
-    sendSmtpEmail.headers['Message-ID'] = `<${Date.now()}.${Math.random().toString(36).substring(2)}@premiumwash.onrender.com>`;
+    sendSmtpEmail.headers['Message-ID'] = `<${Date.now()}.${Math.random().toString(36).substring(2)}@sendinblue.com>`;
 
     const result = await tranEmailApi.sendTransacEmail(sendSmtpEmail);
     console.log('Email sent successfully:', result);
