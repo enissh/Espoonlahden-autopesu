@@ -60,13 +60,30 @@ const isValidEmail = (email) => {
 };
 
 async function sendBookingEmail({ to, subject, text, html }) {
-  await tranEmailApi.sendTransacEmail({
-    sender: { email: process.env.FROM_EMAIL, name: "Premium Wash" },
-    to: [{ email: to }],
-    subject,
-    textContent: text,
-    htmlContent: html,
-  });
+  try {
+    console.log('Attempting to send email to:', to);
+    console.log('Using API Key:', process.env.BREVO_API_KEY ? 'Present' : 'Missing');
+    console.log('From Email:', process.env.FROM_EMAIL);
+    
+    const result = await tranEmailApi.sendTransacEmail({
+      sender: { email: process.env.FROM_EMAIL, name: "Premium Wash" },
+      to: [{ email: to }],
+      subject,
+      textContent: text,
+      htmlContent: html,
+    });
+    
+    console.log('Email sent successfully:', result);
+    return result;
+  } catch (error) {
+    console.error('Error sending email:', error);
+    console.error('Error details:', {
+      message: error.message,
+      response: error.response?.body,
+      status: error.response?.status
+    });
+    throw error;
+  }
 }
 
 // Get all bookings
@@ -227,23 +244,34 @@ exports.createBooking = async (req, res) => {
     `;
 
     try {
+      console.log('Starting to send confirmation emails...');
+      
       // Send confirmation email to customer
+      console.log('Sending customer confirmation email...');
       await sendBookingEmail({
         to: booking.email,
         subject: 'Varausvahvistus - Premium Wash',
         text: `Kiitos varauksestasi Premium Wash -autopesulassa!\n\nVarauksen tiedot:\nNimi: ${booking.name}\nPäivämäärä: ${formattedDate}\nAika: ${booking.time} - ${booking.endTime}\nAjoneuvotyyppi: ${booking.vehicleType}\nPuhelin: ${booking.phone}\n\nValitut palvelut:\n${services.map(s => `${s.name} - ${s.price} (${s.duration})`).join('\n')}\n\nYhteensä: ${totalPrice}€\n\n${note ? `Lisätiedot:\n${note}\n\n` : ''}Jos sinulla on kysyttävää, ota yhteyttä:\nPuhelin: +358442438872\nSähköposti: ${process.env.FROM_EMAIL}`,
         html: customerHtml
       });
+      console.log('Customer confirmation email sent successfully');
 
       // Send notification email to admin
+      console.log('Sending admin notification email...');
       await sendBookingEmail({
         to: process.env.ADMIN_EMAIL,
         subject: 'Uusi varaus - Premium Wash',
         text: `Uusi varaus on vastaanotettu!\n\nAsiakkaan tiedot:\nNimi: ${booking.name}\nSähköposti: ${booking.email}\nPuhelin: ${booking.phone}\n\nVarauksen tiedot:\nPäivämäärä: ${formattedDate}\nAika: ${booking.time} - ${booking.endTime}\nAjoneuvotyyppi: ${booking.vehicleType}\n\nValitut palvelut:\n${services.map(s => `${s.name} - ${s.price} (${s.duration})`).join('\n')}\n\nYhteensä: ${totalPrice}€\n\n${note ? `Lisätiedot:\n${note}\n\n` : ''}Varaus ID: ${savedBooking._id}`,
         html: adminHtml
       });
+      console.log('Admin notification email sent successfully');
     } catch (emailError) {
       console.error('Error sending confirmation emails:', emailError);
+      console.error('Error details:', {
+        message: emailError.message,
+        response: emailError.response?.body,
+        status: emailError.response?.status
+      });
       // Don't fail the booking if email sending fails
     }
 
