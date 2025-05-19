@@ -81,7 +81,12 @@ async function sendBookingEmail({ to, subject, text, html }) {
       'X-Mailin-Custom': 'Premium Wash Booking System',
       'X-Mailin-Tag': 'Booking Confirmation',
       'List-Unsubscribe': `<mailto:${process.env.FROM_EMAIL}?subject=unsubscribe>`,
-      'Precedence': 'bulk'
+      'Precedence': 'bulk',
+      'X-Auto-Response-Suppress': 'OOF, AutoReply',
+      'X-MS-Exchange-CrossTenant-OriginalArrivalTime': new Date().toISOString(),
+      'X-MS-Exchange-CrossTenant-Id': 'premiumwash.onrender.com',
+      'X-MS-Exchange-CrossTenant-FromEntityHeader': 'Premium Wash',
+      'X-MS-Exchange-Transport-CrossTenantHeadersStamped': 'premiumwash.onrender.com'
     };
 
     // Add reply-to header
@@ -94,6 +99,9 @@ async function sendBookingEmail({ to, subject, text, html }) {
     sendSmtpEmail.headers['DKIM-Signature'] = 'v=1; a=rsa-sha256; c=relaxed/relaxed; d=premiumwash.onrender.com; s=default; t=1234567890; bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=; h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=';
     sendSmtpEmail.headers['X-Sender'] = process.env.FROM_EMAIL;
     sendSmtpEmail.headers['X-Authenticated-Sender'] = process.env.FROM_EMAIL;
+
+    // Add message ID for better tracking
+    sendSmtpEmail.headers['Message-ID'] = `<${Date.now()}.${Math.random().toString(36).substring(2)}@premiumwash.onrender.com>`;
 
     const result = await tranEmailApi.sendTransacEmail(sendSmtpEmail);
     console.log('Email sent successfully:', result);
@@ -178,35 +186,35 @@ exports.createBooking = async (req, res) => {
     const customerHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px;">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h2 style="color: #333;">Varausvahvistus</h2>
-          <p style="color: #666;">Kiitos varauksestasi Premium Wash -autopesulassa!</p>
+          <h2 style="color: #333; margin-bottom: 10px;">Varausvahvistus</h2>
+          <p style="color: #666; font-size: 16px;">Kiitos varauksestasi Premium Wash -autopesulassa!</p>
         </div>
         
         <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
-          <h3 style="color: #333; margin-top: 0;">Varauksen tiedot:</h3>
-          <p><strong>Nimi:</strong> ${booking.name}</p>
-          <p><strong>Päivämäärä:</strong> ${formattedDate}</p>
-          <p><strong>Aika:</strong> ${booking.time} - ${booking.endTime}</p>
-          <p><strong>Ajoneuvotyyppi:</strong> ${booking.vehicleType}</p>
-          <p><strong>Puhelin:</strong> ${booking.phone}</p>
+          <h3 style="color: #333; margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px;">Varauksen tiedot:</h3>
+          <p style="margin: 10px 0;"><strong>Nimi:</strong> ${booking.name}</p>
+          <p style="margin: 10px 0;"><strong>Päivämäärä:</strong> ${formattedDate}</p>
+          <p style="margin: 10px 0;"><strong>Aika:</strong> ${booking.time} - ${booking.endTime}</p>
+          <p style="margin: 10px 0;"><strong>Ajoneuvotyyppi:</strong> ${booking.vehicleType}</p>
+          <p style="margin: 10px 0;"><strong>Puhelin:</strong> ${booking.phone}</p>
         </div>
 
         <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
-          <h3 style="color: #333; margin-top: 0;">Valitut palvelut:</h3>
+          <h3 style="color: #333; margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px;">Valitut palvelut:</h3>
           ${services.map(service => `
-            <div style="margin-bottom: 10px;">
-              <p style="margin: 0;"><strong>${service.name}</strong></p>
-              <p style="margin: 0; color: #666;">Hinta: ${service.price} | Kesto: ${service.duration}</p>
+            <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+              <p style="margin: 0; font-size: 16px;"><strong>${service.name}</strong></p>
+              <p style="margin: 5px 0; color: #666;">Hinta: ${service.price} | Kesto: ${service.duration}</p>
             </div>
           `).join('')}
-          <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
-            <p style="margin: 0;"><strong>Yhteensä:</strong> ${totalPrice}€</p>
+          <div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #ddd;">
+            <p style="margin: 0; font-size: 18px;"><strong>Yhteensä:</strong> ${totalPrice}€</p>
           </div>
         </div>
 
         ${note ? `
           <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
-            <h3 style="color: #333; margin-top: 0;">Lisätiedot:</h3>
+            <h3 style="color: #333; margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px;">Lisätiedot:</h3>
             <p style="margin: 0;">${note}</p>
           </div>
         ` : ''}
@@ -215,6 +223,10 @@ exports.createBooking = async (req, res) => {
           <p style="color: #666; margin: 0;">Jos sinulla on kysyttävää, ota yhteyttä:</p>
           <p style="color: #666; margin: 5px 0;">Puhelin: +358442438872</p>
           <p style="color: #666; margin: 0;">Sähköposti: ${process.env.FROM_EMAIL}</p>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #999;">
+          <p>© ${new Date().getFullYear()} Premium Wash. Kaikki oikeudet pidätetään.</p>
         </div>
       </div>
     `;
