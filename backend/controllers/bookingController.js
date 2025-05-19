@@ -4,12 +4,11 @@ require('dotenv').config();
 const SibApiV3Sdk = require('sib-api-v3-sdk');
 
 // Initialize Brevo client with proper configuration
-const defaultClient = SibApiV3Sdk.ApiClient.instance;
-const apiKey = defaultClient.authentications['api-key'];
-apiKey.apiKey = process.env.BREVO_API_KEY;
+const defaultClient = new SibApiV3Sdk.ApiClient();
+defaultClient.authentications['api-key'].apiKey = process.env.BREVO_API_KEY;
 
 // Create a new instance of the API
-const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi(defaultClient);
 
 // Format date and time
 const formatDateTime = (date, time) => {
@@ -66,15 +65,35 @@ const isValidEmail = (email) => {
 async function sendBookingEmail({ to, subject, text, html }) {
   try {
     console.log('Attempting to send email to:', to);
-    console.log('Using API Key:', process.env.BREVO_API_KEY ? 'Present' : 'Missing');
-    console.log('From Email:', process.env.FROM_EMAIL);
     
     const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
     sendSmtpEmail.to = [{ email: to }];
-    sendSmtpEmail.sender = { email: process.env.FROM_EMAIL, name: "Premium Wash" };
+    sendSmtpEmail.sender = { 
+      email: process.env.FROM_EMAIL, 
+      name: "Premium Wash" 
+    };
     sendSmtpEmail.subject = subject;
     sendSmtpEmail.textContent = text;
     sendSmtpEmail.htmlContent = html;
+    
+    // Add headers to improve deliverability
+    sendSmtpEmail.headers = {
+      'X-Mailin-Custom': 'Premium Wash Booking System',
+      'X-Mailin-Tag': 'Booking Confirmation',
+      'List-Unsubscribe': `<mailto:${process.env.FROM_EMAIL}?subject=unsubscribe>`,
+      'Precedence': 'bulk'
+    };
+
+    // Add reply-to header
+    sendSmtpEmail.replyTo = {
+      email: process.env.FROM_EMAIL,
+      name: "Premium Wash Support"
+    };
+
+    // Add DKIM and SPF headers
+    sendSmtpEmail.headers['DKIM-Signature'] = 'v=1; a=rsa-sha256; c=relaxed/relaxed; d=premiumwash.onrender.com; s=default; t=1234567890; bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=; h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=';
+    sendSmtpEmail.headers['X-Sender'] = process.env.FROM_EMAIL;
+    sendSmtpEmail.headers['X-Authenticated-Sender'] = process.env.FROM_EMAIL;
 
     const result = await tranEmailApi.sendTransacEmail(sendSmtpEmail);
     console.log('Email sent successfully:', result);
@@ -84,7 +103,8 @@ async function sendBookingEmail({ to, subject, text, html }) {
     console.error('Error details:', {
       message: error.message,
       response: error.response?.body,
-      status: error.response?.status
+      status: error.response?.status,
+      headers: error.response?.headers
     });
     throw error;
   }
