@@ -2,9 +2,13 @@ const Booking = require('../models/Booking');
 const moment = require('moment');
 require('dotenv').config();
 const SibApiV3Sdk = require('sib-api-v3-sdk');
-const brevoClient = SibApiV3Sdk.ApiClient.instance;
-const apiKey = brevoClient.authentications['api-key'];
+
+// Initialize Brevo client with proper configuration
+const defaultClient = SibApiV3Sdk.ApiClient.instance;
+const apiKey = defaultClient.authentications['api-key'];
 apiKey.apiKey = process.env.BREVO_API_KEY;
+
+// Create a new instance of the API
 const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
 
 // Format date and time
@@ -65,14 +69,14 @@ async function sendBookingEmail({ to, subject, text, html }) {
     console.log('Using API Key:', process.env.BREVO_API_KEY ? 'Present' : 'Missing');
     console.log('From Email:', process.env.FROM_EMAIL);
     
-    const result = await tranEmailApi.sendTransacEmail({
-      sender: { email: process.env.FROM_EMAIL, name: "Premium Wash" },
-      to: [{ email: to }],
-      subject,
-      textContent: text,
-      htmlContent: html,
-    });
-    
+    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+    sendSmtpEmail.to = [{ email: to }];
+    sendSmtpEmail.sender = { email: process.env.FROM_EMAIL, name: "Premium Wash" };
+    sendSmtpEmail.subject = subject;
+    sendSmtpEmail.textContent = text;
+    sendSmtpEmail.htmlContent = html;
+
+    const result = await tranEmailApi.sendTransacEmail(sendSmtpEmail);
     console.log('Email sent successfully:', result);
     return result;
   } catch (error) {
