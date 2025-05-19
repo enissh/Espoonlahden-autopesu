@@ -121,30 +121,126 @@ exports.createBooking = async (req, res) => {
 
     const savedBooking = await booking.save();
 
-    // Send confirmation emails to customer and admin
-    const bookingDetails = `
-Varausvahvistus:
-Nimi: ${booking.name}
-Sähköposti: ${booking.email}
-Puhelin: ${booking.phone}
-Päivämäärä: ${booking.date}
-Aika: ${booking.time} - ${booking.endTime}
-Palvelut: ${booking.services ? booking.services.map(s => s.name).join(', ') : booking.service}
-`;
+    // Format date for email
+    const formattedDate = new Date(date).toLocaleDateString('fi-FI', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    // Calculate total price
+    const totalPrice = services.reduce((sum, service) => 
+      sum + parseInt(service.price.replace('€', '')), 0);
+
+    // Create HTML email template for customer
+    const customerHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h2 style="color: #333;">Varausvahvistus</h2>
+          <p style="color: #666;">Kiitos varauksestasi Premium Wash -autopesulassa!</p>
+        </div>
+        
+        <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
+          <h3 style="color: #333; margin-top: 0;">Varauksen tiedot:</h3>
+          <p><strong>Nimi:</strong> ${booking.name}</p>
+          <p><strong>Päivämäärä:</strong> ${formattedDate}</p>
+          <p><strong>Aika:</strong> ${booking.time} - ${booking.endTime}</p>
+          <p><strong>Ajoneuvotyyppi:</strong> ${booking.vehicleType}</p>
+          <p><strong>Puhelin:</strong> ${booking.phone}</p>
+        </div>
+
+        <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
+          <h3 style="color: #333; margin-top: 0;">Valitut palvelut:</h3>
+          ${services.map(service => `
+            <div style="margin-bottom: 10px;">
+              <p style="margin: 0;"><strong>${service.name}</strong></p>
+              <p style="margin: 0; color: #666;">Hinta: ${service.price} | Kesto: ${service.duration}</p>
+            </div>
+          `).join('')}
+          <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+            <p style="margin: 0;"><strong>Yhteensä:</strong> ${totalPrice}€</p>
+          </div>
+        </div>
+
+        ${note ? `
+          <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
+            <h3 style="color: #333; margin-top: 0;">Lisätiedot:</h3>
+            <p style="margin: 0;">${note}</p>
+          </div>
+        ` : ''}
+
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+          <p style="color: #666; margin: 0;">Jos sinulla on kysyttävää, ota yhteyttä:</p>
+          <p style="color: #666; margin: 5px 0;">Puhelin: +358442438872</p>
+          <p style="color: #666; margin: 0;">Sähköposti: ${process.env.FROM_EMAIL}</p>
+        </div>
+      </div>
+    `;
+
+    // Create HTML email template for admin
+    const adminHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h2 style="color: #333;">Uusi varaus</h2>
+          <p style="color: #666;">Uusi varaus on vastaanotettu!</p>
+        </div>
+        
+        <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
+          <h3 style="color: #333; margin-top: 0;">Asiakkaan tiedot:</h3>
+          <p><strong>Nimi:</strong> ${booking.name}</p>
+          <p><strong>Sähköposti:</strong> ${booking.email}</p>
+          <p><strong>Puhelin:</strong> ${booking.phone}</p>
+        </div>
+
+        <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
+          <h3 style="color: #333; margin-top: 0;">Varauksen tiedot:</h3>
+          <p><strong>Päivämäärä:</strong> ${formattedDate}</p>
+          <p><strong>Aika:</strong> ${booking.time} - ${booking.endTime}</p>
+          <p><strong>Ajoneuvotyyppi:</strong> ${booking.vehicleType}</p>
+        </div>
+
+        <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
+          <h3 style="color: #333; margin-top: 0;">Valitut palvelut:</h3>
+          ${services.map(service => `
+            <div style="margin-bottom: 10px;">
+              <p style="margin: 0;"><strong>${service.name}</strong></p>
+              <p style="margin: 0; color: #666;">Hinta: ${service.price} | Kesto: ${service.duration}</p>
+            </div>
+          `).join('')}
+          <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+            <p style="margin: 0;"><strong>Yhteensä:</strong> ${totalPrice}€</p>
+          </div>
+        </div>
+
+        ${note ? `
+          <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
+            <h3 style="color: #333; margin-top: 0;">Lisätiedot:</h3>
+            <p style="margin: 0;">${note}</p>
+          </div>
+        ` : ''}
+
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+          <p style="color: #666; margin: 0;">Varaus ID: ${savedBooking._id}</p>
+        </div>
+      </div>
+    `;
 
     try {
+      // Send confirmation email to customer
       await sendBookingEmail({
         to: booking.email,
         subject: 'Varausvahvistus - Premium Wash',
-        text: bookingDetails,
-        html: `<pre>${bookingDetails}</pre>`
+        text: `Kiitos varauksestasi Premium Wash -autopesulassa!\n\nVarauksen tiedot:\nNimi: ${booking.name}\nPäivämäärä: ${formattedDate}\nAika: ${booking.time} - ${booking.endTime}\nAjoneuvotyyppi: ${booking.vehicleType}\nPuhelin: ${booking.phone}\n\nValitut palvelut:\n${services.map(s => `${s.name} - ${s.price} (${s.duration})`).join('\n')}\n\nYhteensä: ${totalPrice}€\n\n${note ? `Lisätiedot:\n${note}\n\n` : ''}Jos sinulla on kysyttävää, ota yhteyttä:\nPuhelin: +358442438872\nSähköposti: ${process.env.FROM_EMAIL}`,
+        html: customerHtml
       });
 
+      // Send notification email to admin
       await sendBookingEmail({
         to: process.env.ADMIN_EMAIL,
         subject: 'Uusi varaus - Premium Wash',
-        text: bookingDetails,
-        html: `<pre>${bookingDetails}</pre>`
+        text: `Uusi varaus on vastaanotettu!\n\nAsiakkaan tiedot:\nNimi: ${booking.name}\nSähköposti: ${booking.email}\nPuhelin: ${booking.phone}\n\nVarauksen tiedot:\nPäivämäärä: ${formattedDate}\nAika: ${booking.time} - ${booking.endTime}\nAjoneuvotyyppi: ${booking.vehicleType}\n\nValitut palvelut:\n${services.map(s => `${s.name} - ${s.price} (${s.duration})`).join('\n')}\n\nYhteensä: ${totalPrice}€\n\n${note ? `Lisätiedot:\n${note}\n\n` : ''}Varaus ID: ${savedBooking._id}`,
+        html: adminHtml
       });
     } catch (emailError) {
       console.error('Error sending confirmation emails:', emailError);
