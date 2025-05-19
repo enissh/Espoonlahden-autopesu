@@ -1,0 +1,82 @@
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #A3D8F4, #7FB5B5);
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.loginForm {
+  background-color: #fff;
+  width: 100%;
+  max-width: 400px;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.logo {
+  margin-bottom: 20px;
+}
+
+.formTitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: #00796b;
+}
+
+.formControl {
+  width: 100%;
+  padding: 12px 15px;
+  margin-top: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #b0bec5;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.formControl:focus {
+  border-color: #00796b;
+  outline: none;
+}
+
+.btnSubmit {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(to right, #4db6ac, #00796b);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btnSubmit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 121, 107, 0.2);
+}
+
+.errorMessage {
+  margin-top: 15px;
+  color: #d32f2f;
+  font-weight: 500;
+}
+
+.inputGroup {
+  text-align: left;
+  margin-bottom: 20px;
+}
+.logoImage {
+  width: 200px;
+  margin-bottom: 10px;
+}

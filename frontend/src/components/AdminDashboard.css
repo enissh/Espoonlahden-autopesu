@@ -1,0 +1,285 @@
+/* AdminDashboard.css */
+
+/* Navbar Styles */
+.custom-navbar {
+    background-color: #333;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-brand {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    background-color: #333;
+    padding: 1rem;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    z-index: 999;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar li {
+    margin-bottom: 0.5rem;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.sidebar a:hover {
+    background-color: #444;
+}
+
+.sidebar-icon {
+    margin-right: 0.75rem;
+    font-size: 1.1rem;
+    color: white;
+}
+
+/* Table Styles */
+.table {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.table th,
+.table td {
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+/* Admin Dashboard Layout */
+.container {
+    margin-left: 250px;
+    padding: 80px 2rem 2rem;
+    flex-grow: 1;
+    transition: margin-left 0.3s ease;
+}
+
+.reservation-form {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.my-calendar {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    height: calc(100vh - 140px);
+    min-height: 600px;
+}
+
+.logout-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+}
+
+/* Form Styles */
+.form-group label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #495057;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 0.75rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Mobile Menu Button */
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 1200px) {
+    .container {
+        padding: 80px 1rem 1rem;
+    }
+    
+    .my-calendar {
+        height: calc(100vh - 120px);
+    }
+}
+
+@media (max-width: 991px) {
+    .container {
+        margin-left: 0;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .my-calendar {
+        height: 500px;
+        margin-top: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .custom-navbar {
+        padding: 0.75rem;
+    }
+
+    .navbar-brand {
+        font-size: 1rem;
+    }
+
+    .sidebar {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .container {
+        padding: 70px 0.75rem 1rem;
+    }
+
+    .reservation-form {
+        margin: 0 0 1rem 0;
+    }
+
+    .form-control {
+        padding: 0.625rem;
+    }
+
+    .my-calendar {
+        height: 400px;
+    }
+
+    /* Adjust calendar responsive styles */
+    .rbc-calendar {
+        font-size: 0.875rem;
+    }
+
+    .rbc-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .rbc-toolbar button {
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .custom-navbar {
+        padding: 0.5rem;
+    }
+
+    .navbar-brand {
+        font-size: 0.875rem;
+    }
+
+    .sidebar {
+        padding: 0.75rem;
+    }
+
+    .container {
+        padding: 65px 0.5rem 1rem;
+    }
+
+    .my-calendar {
+        height: 350px;
+        padding: 0.5rem;
+    }
+
+    .form-control {
+        padding: 0.5rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+    }
+}
+
+/* Dark overlay for mobile sidebar */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}

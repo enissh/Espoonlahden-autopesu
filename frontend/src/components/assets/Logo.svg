@@ -1,0 +1,81 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="800px" height="600px" viewBox="0 0 800 600">
+<defs>
+<radialGradient id="Gradient_1" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="172.6125" fx="0" fy="0" gradientTransform="matrix( 1, 0, 0, 8.299732058802231, 460.3,328.85) " spreadMethod="pad">
+<stop  offset="0%" stop-color="#FF9900"/>
+
+<stop  offset="100%" stop-color="#00CCFF"/>
+</radialGradient>
+
+<radialGradient id="Gradient_2" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="172.6125" fx="0" fy="0" gradientTransform="matrix( 1, 0, 0, 1.065609385183576, 460.3,308.15) " spreadMethod="pad">
+<stop  offset="0%" stop-color="#FF9900"/>
+
+<stop  offset="100%" stop-color="#00CCFF"/>
+</radialGradient>
+
+<radialGradient id="Gradient_3" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="183.75" fx="0" fy="0" gradientTransform="matrix( 1, 0, 0, 1, 465.1,311.35) " spreadMethod="pad">
+<stop  offset="0%" stop-color="#FF9900"/>
+
+<stop  offset="100%" stop-color="#00CCFF"/>
+</radialGradient>
+
+<radialGradient id="Gradient_4" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="172.6125" fx="0" fy="0" gradientTransform="matrix( 1, 0, 0, 1.065609385183576, 460.3,317.2) " spreadMethod="pad">
+<stop  offset="0%" stop-color="#FF9900"/>
+
+<stop  offset="100%" stop-color="#00CCFF"/>
+</radialGradient>
+</defs>
+
+<g id="Layer_2">
+<g transform="matrix( 6.10687255859375, 0, 0, 5.4545440673828125, -513.3,-376.65) ">
+<g>
+<g>
+<path fill="#FFFFFF" fill-opacity="0" stroke="none" d="
+M 215.05 179.05
+L 215.05 69.05 84.05 69.05 84.05 179.05 215.05 179.05 Z"/>
+</g>
+</g>
+</g>
+</g>
+
+<g id="Layer_1">
+<g>
+<g>
+<g>
+<path fill="url(#Gradient_1)" stroke="none" d="
+M 324.05 305.1
+L 324.05 249.8 318.1 249.8 318.1 305.1 324.05 305.1
+M 466.3 249.8
+L 459.5 249.8 459.5 305.1 466.3 305.1 466.3 249.8 Z"/>
+
+<path fill="url(#Gradient_2)" stroke="none" d="
+M 324.05 306.2
+L 324.05 305.1 318.1 305.1 318.1 314.4 466.3 314.4 466.3 305.1 459.5 305.1 459.5 306.2 324.05 306.2 Z"/>
+
+<path fill="#00CCFF" stroke="none" d="
+M 418.75 257.5
+L 413.7 252.55 392.3 273.9 377.45 259.1 372.4 264.05 392.35 283.95 418.75 257.5 Z"/>
+
+<path fill="url(#Gradient_3)" stroke="none" d="
+M 418.05 244.55
+Q 417.25 243.6 416.4 242.75 407.05 233.45 393.85 233.45 380.6 233.45 371.25 242.75 361.9 252.15 361.9 265.4 361.9 278.65 371.25 288 380.6 297.35 393.85 297.35 407.05 297.35 416.4 288 425.8 278.65 425.8 265.4 425.8 260.35 424.45 255.85
+L 421.15 259.15
+Q 421.8 262.15 421.8 265.4 421.8 276.9 413.65 285 405.55 293.1 394.05 293.1 382.6 293.1 374.4 285 366.3 276.9 366.3 265.4 366.3 253.9 374.4 245.8 382.6 237.65 394.05 237.65 405.55 237.65 413.65 245.8 414.45 246.6 415.15 247.4
+L 418.05 244.55 Z"/>
+
+<path fill="url(#Gradient_4)" stroke="none" d="
+M 466.3 231.45
+L 466.3 213.05 429.05 213.05 429.05 204.45 421.2 204.45 421.2 213.05 398.3 213.05 398.3 204.45 390.5 204.45 390.5 213.05 367.6 213.05 367.6 204.45 359.75 204.45 359.75 213.05 318.1 213.05 318.1 231.45 324.05 231.45 324.05 220.85 359.75 220.85 359.75 227.85 367.6 227.85 367.6 220.85 390.5 220.85 390.5 227.85 398.3 227.85 398.3 220.85 421.2 220.85 421.2 227.85 429.05 227.85 429.05 220.85 459.5 220.85 459.5 231.45 466.3 231.45 Z"/>
+</g>
+</g>
+</g>
+
+<g transform="matrix( 1, 0, 0, 1, 204,331.95) ">
+<clipPath id="Mask_Mask_1">
+<rect x="-2" y="-2" width="410.2" height="93.65" fill="#FFFFFF" stroke="none"/>
+</clipPath>
+
+<text clip-path="url(#Mask_Mask_1)" writing-mode="lr"><tspan x="0" y="72.1" baseline-shift="0%" font-family="Montserrat Medium" font-size="65" fill="#00CCFF" xml:space="preserve">Book </tspan><tspan baseline-shift="0%" font-family="Montserrat Medium" font-size="65" fill="#76B489" xml:space="preserve">It</tspan><tspan baseline-shift="0%" font-family="Montserrat Medium" font-size="65" fill="#00CCFF" xml:space="preserve"> </tspan><tspan baseline-shift="0%" font-family="Montserrat Medium" font-size="65" fill="#F79A08" xml:space="preserve">Now</tspan></text>
+</g>
+</g>
+</svg>
