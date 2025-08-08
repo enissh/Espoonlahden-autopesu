@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import moment from 'moment';
+import { FaCar, FaWater } from 'react-icons/fa';
 import './BookingForm.css';
 import { API_BASE_URL, axiosConfig } from '../config';
 
@@ -506,37 +507,90 @@ const BookingForm = () => {
     );
   };
 
-  return (
-    <div className="container mt-5 mb-5">
-      <div className="row justify-content-center">
-        <div className="col-xl-9">
-          <div className="card shadow-lg border-0" style={{ borderRadius: '16px', maxWidth: '1200px', margin: '0 auto' }}>
-            <div className="card-body p-4 p-md-5">
-              <h2 className="card-title text-center mb-5" style={{ fontSize: '2rem', fontWeight: '600' }}>Varaa pesuaika</h2>
+  // Logo Component
+  const Logo = () => (
+    <div className="logo-container text-center mb-4">
+      <div className="logo-icon d-inline-block position-relative mb-3">
+        <FaCar className="car-icon" />
+        <FaWater className="water-icon" />
+      </div>
+      <h1 className="logo-text mb-0">Premium Wash</h1>
+      <p className="text-muted mt-2">Ammattitaitoista autopesua Espoossa</p>
+    </div>
+  );
 
-              <form onSubmit={handleSubmit}>
-                {/* Vehicle Selection */}
-                <div className="mb-4">
-                  <h5 className="mb-3">Valitse ajoneuvotyyppi:</h5>
-                  <div className="d-flex justify-content-around flex-wrap gap-2">
-                    {Object.keys(vehicleOptions).map((type) => (
-                      <button
-                        key={type}
-                        type="button"
-                        className={`btn ${vehicleType === type ? 'btn-primary' : 'btn-outline-primary'} flex-grow-1 d-flex flex-column align-items-center py-3`}
-                        onClick={() => setVehicleType(type)}
-                        style={{ maxWidth: '200px', minHeight: '100px' }}
-                      >
-                        {type === 'maastoauto' ? (
-                          <i className={`fas fa-truck-pickup fa-2x mb-2`}></i>
-                        ) : (
-                          <i className={`fas ${vehicleIcons[type]} fa-2x mb-2`}></i>
-                        )}
-                        <span>{type.toUpperCase()}</span>
-                      </button>
-                    ))}
+  // Add CSS for the logo
+  const logoStyles = `
+    .logo-container {
+      margin-bottom: 2rem;
+    }
+    .logo-icon {
+      position: relative;
+      width: 80px;
+      height: 60px;
+      margin: 0 auto 1rem;
+    }
+    .car-icon {
+      font-size: 3.5rem;
+      color: #3498db;
+      position: relative;
+      z-index: 2;
+    }
+    .water-icon {
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2rem;
+      color: #2980b9;
+      z-index: 1;
+      opacity: 0.8;
+    }
+    .logo-text {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #3498db, #2ecc71);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin: 0.5rem 0 0.25rem;
+    }
+  `;
+
+  return (
+    <div className="container py-4">
+      <style>{logoStyles}</style>
+      <div className="row justify-content-center">
+        <div className="col-lg-10">
+          <div className="card shadow">
+            <div className="card-body p-4">
+              <Logo />
+              <div className="card-body p-4 p-md-5">
+                <h2 className="card-title text-center mb-5" style={{ fontSize: '2rem', fontWeight: '600' }}>Varaa pesuaika</h2>
+
+                <form onSubmit={handleSubmit}>
+                  {/* Vehicle Selection */}
+                  <div className="mb-4">
+                    <h5 className="mb-3">Valitse ajoneuvotyyppi:</h5>
+                    <div className="d-flex justify-content-around flex-wrap gap-2">
+                      {Object.keys(vehicleOptions).map((type) => (
+                        <button
+                          key={type}
+                          type="button"
+                          className={`btn ${vehicleType === type ? 'btn-primary' : 'btn-outline-primary'} flex-grow-1 d-flex flex-column align-items-center py-3`}
+                          onClick={() => setVehicleType(type)}
+                          style={{ maxWidth: '200px', minHeight: '100px' }}
+                        >
+                          {type === 'maastoauto' ? (
+                            <i className={`fas fa-truck-pickup fa-2x mb-2`}></i>
+                          ) : (
+                            <i className={`fas ${vehicleIcons[type]} fa-2x mb-2`}></i>
+                          )}
+                          <span>{type.toUpperCase()}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
                 {/* Service Selection */}
                 <div className="mb-4">
