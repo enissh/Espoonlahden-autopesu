@@ -1,24 +1,49 @@
 services:
+  # Frontend Service
   - type: web
     name: premiumwash-frontend
     env: static
-    buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: ./frontend/build
+    root: frontend  # Specify the frontend directory as root
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./build  # Path relative to the root
     routes:
       - type: rewrite
         source: /*
         destination: /index.html
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://premiumwash-backend.onrender.com/api  # Update this after backend is deployed
+
+  # Backend Service
   - type: web
     name: premiumwash-backend
     env: node
-    buildCommand: cd backend && npm install
-    startCommand: cd backend && npm start
+    root: backend  # Specify the backend directory as root
+    buildCommand: npm install
+    startCommand: npm start
     envVars:
       - key: MONGODB_URI
-        value: mongodb+srv://premiumwash:Prishtina.001@cluster0.4oscedz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+        fromDatabase:
+          name: premiumwash-db
+          property: connectionString
       - key: JWT_SECRET
-        value: premiumwash_secure_jwt_secret_key_2024_enissh_carwash
+        generateValue: true
+      - key: NODE_ENV
+        value: production
       - key: ADMIN_EMAIL
-        value: enisshabani71@gmail.com  
+        value: enisshabani71@gmail.com
       - key: ADMIN_PASSWORD
-        value: admin123
+        generateValue: true
+        # For security, generate a strong password and update it in your database after deployment
+      - key: PORT
+        value: 10000
+      - key: BREVO_API_KEY
+        sync: false  # Set this in Render dashboard
+      - key: FROM_EMAIL
+        value: noreply@premiumwash.com
+
+# Database (MongoDB)
+databases:
+  - name: premiumwash-db
+    databaseName: premiumwash
+    user: premiumwash-user
