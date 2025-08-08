@@ -565,7 +565,7 @@ const BookingForm = () => {
           <div className="card shadow">
             <div className="card-body p-4">
               <Logo />
-              <div className="card-body p-4 p-md-5">
+              <div className="p-4 p-md-5">
                 <h2 className="card-title text-center mb-5" style={{ fontSize: '2rem', fontWeight: '600' }}>Varaa pesuaika</h2>
 
                 <form onSubmit={handleSubmit}>
@@ -592,65 +592,65 @@ const BookingForm = () => {
                     </div>
                   </div>
 
-                {/* Service Selection */}
-                <div className="mb-4">
-                  <h5 className="mb-3">Valitse palvelut (enintään 5):</h5>
-                  <div className="row g-3">
-                    {vehicleType && vehicleOptions[vehicleType] && vehicleOptions[vehicleType].map((service) => {
-                      const isSelected = selectedServices.some(s => s.name === service.name);
-                      return (
-                        <div key={service.name} className="col-md-6">
-                          <div 
-                            className={`card service-card h-100 ${isSelected ? 'selected' : ''}`}
-                            onClick={() => handleServiceSelect(service)}
-                            role="button"
-                            tabIndex={0}
-                            onKeyPress={(e) => {
-                              if (e.key === 'Enter' || e.key === ' ') {
-                                handleServiceSelect(service);
-                              }
-                            }}
-                          >
-                            <div className="card-body">
-                              <h6 className="card-title">{service.name}</h6>
-                              <div className="service-price-duration">
-                                <span className="text-primary fw-bold">{service.price}</span>
-                                <span className="text-muted small">Kesto: {service.duration}</span>
-                              </div>
-                              <div 
-                                className="description-toggle"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleDescription(service.name);
-                                }}
-                                onKeyPress={(e) => {
-                                  if (e.key === 'Enter' || e.key === ' ') {
+                  {/* Service Selection */}
+                  <div className="mb-4">
+                    <h5 className="mb-3">Valitse palvelut (enintään 5):</h5>
+                    <div className="row g-3">
+                      {vehicleType && vehicleOptions[vehicleType] && vehicleOptions[vehicleType].map((service) => {
+                        const isSelected = selectedServices.some(s => s.name === service.name);
+                        return (
+                          <div key={service.name} className="col-md-6">
+                            <div 
+                              className={`card service-card h-100 ${isSelected ? 'selected' : ''}`}
+                              onClick={() => handleServiceSelect(service)}
+                              role="button"
+                              tabIndex={0}
+                              onKeyPress={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  handleServiceSelect(service);
+                                }
+                              }}
+                            >
+                              <div className="card-body">
+                                <h6 className="card-title">{service.name}</h6>
+                                <div className="service-price-duration">
+                                  <span className="text-primary fw-bold">{service.price}</span>
+                                  <span className="text-muted small">Kesto: {service.duration}</span>
+                                </div>
+                                <div 
+                                  className="description-toggle"
+                                  onClick={(e) => {
                                     e.stopPropagation();
                                     toggleDescription(service.name);
-                                  }
-                                }}
-                                role="button"
-                                tabIndex={0}
-                              >
-                                <span>{expandedDescriptions[service.name] ? 'Näytä vähemmän' : 'Näytä lisää'}</span>
-                                <i className={`fas fa-chevron-down ${expandedDescriptions[service.name] ? 'expanded' : ''}`}></i>
-                              </div>
-                              <div 
-                                className={`service-description ${expandedDescriptions[service.name] ? 'expanded' : ''}`}
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <p className="card-text small mb-0">{service.description}</p>
+                                  }}
+                                  onKeyPress={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                      e.stopPropagation();
+                                      toggleDescription(service.name);
+                                    }
+                                  }}
+                                  role="button"
+                                  tabIndex={0}
+                                >
+                                  <span>{expandedDescriptions[service.name] ? 'Näytä vähemmän' : 'Näytä lisää'}</span>
+                                  <i className={`fas fa-chevron-down ${expandedDescriptions[service.name] ? 'expanded' : ''}`}></i>
+                                </div>
+                                <div 
+                                  className={`service-description ${expandedDescriptions[service.name] ? 'expanded' : ''}`}
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <p className="card-text small mb-0">{service.description || 'Ei lisätietoja saatavilla.'}</p>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
 
-                {/* Selected Services Summary */}
-                {selectedServices.length > 0 && (
+                  {/* Selected Services Summary */}
+                  {selectedServices.length > 0 && (
                   <div className="mt-4 p-4 bg-light rounded shadow-sm">
                     <h6 className="mb-3">Valitut palvelut:</h6>
                     <ul className="list-unstyled">
@@ -684,10 +684,10 @@ const BookingForm = () => {
                       </div>
                     </div>
                   </div>
-                )}
+                  )}
 
-                {/* Date Selection */}
-                {selectedServices.length > 0 && (
+                  {/* Date Selection */}
+                  {selectedServices.length > 0 && (
                   <div className="mb-4">
                     <h5 className="mb-3">Valitse päivä:</h5>
                     <div className="date-selection-container">
@@ -745,94 +745,47 @@ const BookingForm = () => {
                       </div>
                     </div>
                   </div>
-                )}
-
-                {/* Time Selection */}
-                {selectedServices.length > 0 && selectedDate && (
-                  <div className="mb-4">
-                    <h5 className="mb-3">Valitse aika:</h5>
-                    <div className="time-selection">
-                      {renderTimeSlots()}
-                    </div>
-                  </div>
-                )}
-
-                {/* Contact Information */}
-                <div className="row g-3 mb-4">
-                  <div className="col-md-6">
-                    <label className="form-label">Nimi/Rekisterinumero</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label className="form-label">Sähköposti</label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label className="form-label">Puhelin</label>
-                    <div className="input-group">
-                      <span className="input-group-text" style={{ padding: '0 8px' }}>
-                        <span role="img" aria-label="Finnish flag">🇫🇮</span> +358
-                      </span>
-                      <input
-                        type="tel"
-                        className="form-control"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
-                        placeholder="123456789"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-12">
-                    <label className="form-label">Lisätiedot</label>
-                    <textarea
-                      className="form-control"
-                      rows="3"
-                      value={note}
-                      onChange={(e) => setNote(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                {/* Messages */}
-                {errorMessage && (
-                  <div className="alert alert-danger mb-3" role="alert">
-                    {errorMessage}
-                  </div>
-                )}
-                {successMessage && (
-                  <div className="alert alert-success mb-3" role="alert">
-                    {successMessage}
-                  </div>
-                )}
-
-                {/* Submit Button */}
-                <button 
-                  type="submit" 
-                  className="btn btn-primary w-100 btn-lg"
-                  disabled={!vehicleType || selectedServices.length === 0 || !selectedDate || !selectedHour || !name || !email || isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                      Varataan...
-                    </>
-                  ) : (
-                    'Varaa aika'
                   )}
-                </button>
-              </form>
+
+                  {/* Time Selection */}
+                  {selectedServices.length > 0 && selectedDate && (
+                    <div className="mb-4">
+                      <h5 className="mb-3">Valitse aika:</h5>
+                      <div className="time-selection">
+                        {renderTimeSlots()}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Messages */}
+                  {errorMessage && (
+                    <div className="alert alert-danger mb-3" role="alert">
+                      {errorMessage}
+                    </div>
+                  )}
+                  {successMessage && (
+                    <div className="alert alert-success mb-3" role="alert">
+                      {successMessage}
+                    </div>
+                  )}
+
+                  {/* Submit Button */}
+                  <button 
+                    type="submit" 
+                    className="btn btn-primary w-100 btn-lg"
+                    disabled={!vehicleType || selectedServices.length === 0 || !selectedDate || !selectedHour || !name || !email || isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Varataan...
+                      </>
+                    ) : (
+                      'Varaa aika'
+                    )}
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
