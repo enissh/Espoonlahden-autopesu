@@ -172,23 +172,23 @@ const BookingForm = () => {
     });
   };
 
-  const generateTimeSlots = (startHour, endHour, intervalMinutes) => {
-    const slots = [];
-    const start = new Date();
-    start.setHours(startHour, 0, 0, 0);
+  // const generateTimeSlots = (startHour, endHour, intervalMinutes) => {
+  //   const slots = [];
+  //   const start = new Date();
+  //   start.setHours(startHour, 0, 0, 0);
 
-    const end = new Date();
-    end.setHours(endHour, 0, 0, 0);
+  //   const end = new Date();
+  //   end.setHours(endHour, 0, 0, 0);
 
-    // Include the end time (18:00) in the slots
-    while (start <= end) {
-      const timeStr = start.toTimeString().slice(0, 5);
-      slots.push(timeStr);
-      start.setMinutes(start.getMinutes() + intervalMinutes);
-    }
+  //   // Include the end time (18:00) in the slots
+  //   while (start <= end) {
+  //     const timeStr = start.toTimeString().slice(0, 5);
+  //     slots.push(timeStr);
+  //     start.setMinutes(start.getMinutes() + intervalMinutes);
+  //   }
 
-    return slots;
-  };
+  //   return slots;
+  // };
 
   const calculateEndTime = (startTime, totalDuration) => {
     const [hours, minutes] = startTime.split(':').map(Number);
