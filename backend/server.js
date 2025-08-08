@@ -24,15 +24,24 @@ const corsOptions = {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+    if (allowedOrigins.includes('*')) {
+      return callback(null, true);
+    }
+    
+    if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
     
     // Check if the origin matches any pattern with wildcards
     if (allowedOrigins.some(allowedOrigin => {
       if (allowedOrigin.includes('*')) {
-        const regex = new RegExp('^' + allowedOrigin.replace(/\*/g, '.*') + '$');
-        return regex.test(origin);
+        try {
+          const regex = new RegExp('^' + allowedOrigin.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*') + '$');
+          return regex.test(origin);
+        } catch (err) {
+          console.error('Error creating regex for origin:', allowedOrigin, err);
+          return false;
+        }
       }
       return false;
     })) {
@@ -46,17 +55,18 @@ const corsOptions = {
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
-  exposedHeaders: ['Content-Range', 'X-Content-Range']
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
 };
+
+// Middleware
+app.use(express.json()); // Middleware to parse incoming JSON requests
 
 // Apply CORS middleware
 app.use(cors(corsOptions));
 
 // Handle preflight requests
 app.options('*', cors(corsOptions));
-
-// Middleware
-app.use(express.json()); // Middleware to parse incoming JSON requests
 
 // MongoDB connection with updated options
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/carwash')
