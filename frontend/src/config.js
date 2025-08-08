@@ -1,7 +1,7 @@
 const isDevelopment = process.env.NODE_ENV === 'development';
 const API_BASE_URL = isDevelopment 
   ? 'http://localhost:5000'
-  : 'https://premiumwash.onrender.com';
+  : 'https://espoonlahden-autopesu.onrender.com';
 
 const axiosConfig = {
   withCredentials: true,

@@ -248,47 +248,48 @@ const BookingForm = () => {
     }
   }, [selectedDate]);
 
-  const isTimeSlotAvailable = (time, duration) => {
-    if (!selectedDate || !bookedSlots[selectedDate]) return true;
-    
-    const endTime = calculateEndTime(time, duration);
-    const currentMoment = moment(time, 'HH:mm');
-    const endMoment = moment(endTime, 'HH:mm');
-    
-    // Check each 15-minute interval within the service duration
-    let checkMoment = moment(time, 'HH:mm');
-    while (checkMoment.isBefore(endMoment)) {
-      const checkTimeStr = checkMoment.format('HH:mm');
-      if (bookedSlots[selectedDate][checkTimeStr]) {
-        return false;
-      }
-      checkMoment.add(15, 'minutes');
-    }
-    
-    return true;
-  };
+  // Commented out unused functions to fix build errors
+  // const isTimeSlotAvailable = (time, duration) => {
+  //   if (!selectedDate || !bookedSlots[selectedDate]) return true;
+  //   
+  //   const endTime = calculateEndTime(time, duration);
+  //   const currentMoment = moment(time, 'HH:mm');
+  //   const endMoment = moment(endTime, 'HH:mm');
+  //   
+  //   // Check each 15-minute interval within the service duration
+  //   let checkMoment = moment(time, 'HH:mm');
+  //   while (checkMoment.isBefore(endMoment)) {
+  //     const checkTimeStr = checkMoment.format('HH:mm');
+  //     if (bookedSlots[selectedDate][checkTimeStr]) {
+  //       return false;
+  //     }
+  //     checkMoment.add(15, 'minutes');
+  //   }
+  //   
+  //   return true;
+  // };
 
-  const availableTimes = generateTimeSlots(9, 18, 15);
+  // const availableTimes = generateTimeSlots(9, 18, 15);
 
-  const handleApiError = (error) => {
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      console.error('Response data:', error.response.data);
-      console.error('Response status:', error.response.status);
-      setErrorMessage(error.response.data.message || 'Palvelimella tapahtui virhe. Yritä uudelleen.');
-    } else if (error.request) {
-      // The request was made but no response was received
-      console.error('No response received:', error.request);
-      setErrorMessage('Palvelimeen ei saada yhteyttä. Tarkista internet-yhteys ja yritä uudelleen.');
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.error('Error setting up request:', error.message);
-      setErrorMessage('Virhe pyynnön käsittelyssä. Yritä uudelleen.');
-    }
-    setSuccessMessage('');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  // const handleApiError = (error) => {
+  //   if (error.response) {
+  //     // The request was made and the server responded with a status code
+  //     // that falls out of the range of 2xx
+  //     console.error('Response data:', error.response.data);
+  //     console.error('Response status:', error.response.status);
+  //     setErrorMessage(error.response.data.message || 'Palvelimella tapahtui virhe. Yritä uudelleen.');
+  //   } else if (error.request) {
+  //     // The request was made but no response was received
+  //     console.error('No response received:', error.request);
+  //     setErrorMessage('Palvelimeen ei saada yhteyttä. Tarkista internet-yhteys ja yritä uudelleen.');
+  //   } else {
+  //     // Something happened in setting up the request that triggered an Error
+  //     console.error('Error setting up request:', error.message);
+  //     setErrorMessage('Virhe pyynnön käsittelyssä. Yritä uudelleen.');
+  //   }
+  //   setSuccessMessage('');
+  //   window.scrollTo({ top: 0, behavior: 'smooth' });
+  // };
 
   const validateBookingTime = (selectedTime, duration) => {
     const startMoment = moment(selectedTime, 'HH:mm');
