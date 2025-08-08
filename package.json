@@ -7,13 +7,12 @@
     "frontend",
     "backend"
   ],
-  "scripts": {
-    "start": "cd backend && npm start",
-    "build": "cd frontend && npm run build",
-    "install-frontend": "cd frontend && npm install",
-    "install-backend": "cd backend && npm install",
-    "postinstall": "npm run install-frontend && npm run install-backend"
-  },
+ "scripts": {
+  "start": "cd backend && npm start",
+  "build": "cd frontend && npm run build",
+  "install-frontend": "cd frontend && npm install",
+  "install-backend": "cd backend && npm install"
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/enissh/Espoonlahden-autopesu.git"
