@@ -1,0 +1,23 @@
+{
+  "name": "premiumwash",
+  "version": "1.0.0",
+  "description": "Premium Wash - Car Wash Booking System",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "start": "cd backend && npm start",
+    "build": "cd frontend && npm run build",
+    "install-frontend": "cd frontend && npm install",
+    "install-backend": "cd backend && npm install",
+    "postinstall": "npm run install-frontend && npm run install-backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enissh/Espoonlahden-autopesu.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
