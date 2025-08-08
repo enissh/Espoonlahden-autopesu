@@ -9,26 +9,41 @@ const app = express();
 const PORT = process.env.PORT || 5000; // Ensure the server runs on the correct port (default to 5000)
 
 // CORS configuration
-const allowedOrigins = [
-  'https://premiumwash.onrender.com',
-  'https://premiumwash-1.onrender.com'
-];
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
+  : [
+      'http://localhost:3000',
+      'https://espoonlahden-autopesu.netlify.app',
+      'https://premiumwash.onrender.com',
+      'https://premiumwash-1.onrender.com'
+    ];
 
-app.use(cors({
+console.log('Allowed CORS origins:', allowedOrigins);
+
+const corsOptions = {
   origin: function(origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+    if (allowedOrigins.includes('*') || allowedOrigins.includes(origin) || 
+        allowedOrigins.some(allowedOrigin => origin.startsWith(allowedOrigin.replace('*', '')))) {
+      return callback(null, true);
     }
-    return callback(null, true);
+    
+    const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
+    console.warn(msg);
+    return callback(new Error(msg), false);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
-}));
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range']
+};
+
+app.use(cors(corsOptions));
+
+// Handle preflight requests
+app.options('*', cors(corsOptions));
 
 // Middleware
 app.use(express.json()); // Middleware to parse incoming JSON requests
