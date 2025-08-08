@@ -13,20 +13,29 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
   : [
       'http://localhost:3000',
-      'https://espoonlahden-autopesu.netlify.app',
-      'https://premiumwash.onrender.com',
-      'https://premiumwash-1.onrender.com'
+      'https://espoonlahden-autopesu.netlify.app'
     ];
 
 console.log('Allowed CORS origins:', allowedOrigins);
 
+// Configure CORS with the allowed origins
 const corsOptions = {
   origin: function(origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.includes('*') || allowedOrigins.includes(origin) || 
-        allowedOrigins.some(allowedOrigin => origin.startsWith(allowedOrigin.replace('*', '')))) {
+    if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    // Check if the origin matches any pattern with wildcards
+    if (allowedOrigins.some(allowedOrigin => {
+      if (allowedOrigin.includes('*')) {
+        const regex = new RegExp('^' + allowedOrigin.replace(/\*/g, '.*') + '$');
+        return regex.test(origin);
+      }
+      return false;
+    })) {
       return callback(null, true);
     }
     
@@ -40,6 +49,7 @@ const corsOptions = {
   exposedHeaders: ['Content-Range', 'X-Content-Range']
 };
 
+// Apply CORS middleware
 app.use(cors(corsOptions));
 
 // Handle preflight requests
